@@ -51,10 +51,16 @@ Eine erfolgreiche Registrierung leitet den Benutzer automatisch auf die Loginsei
 
 Auf der folgenden Seite könnten die Benutzerdaten angepasst werden.
 
-Anmerkung: Der Username agiert hierbei als Benutzer ID und kann daher nach der Registrierung nicht mehr verändert werden. Falls die Felder Name oder E-Mail verändert werden und der neue Wert nicht den festgelegten Kritieren entspricht werden diese nicht verändert. Die alten Werte werden beibehalten
+Anmerkung: 
+
+Der Username agiert hierbei als Benutzer ID und kann daher nach der Registrierung nicht mehr verändert werden. Falls die Felder Name oder E-Mail verändert werden und der neue Wert nicht den festgelegten Kritieren entspricht werden diese nicht verändert. Die alten Werte werden beibehalten
 
 Speicherung der Daten: Die Benutzerdaten werden lediglich Temporär gespeichert. Solange wie der Server läuft kann auf alle angelegten Nutzer zugegriffen werden. Startet der Server neu, sind alle Daten verloren!
 
-Tests: Die automatischen Tests belaufen sich auf die Erstellung eines neuen Benutzers sowie auf das Testen der CRUD Funktionen. Da die CRUD Funktionen aufeinander beruhen, müssen diese in einer chronologischen Reihenfolge abgearbeitet werden und können nicht einzeln getestet werden.
+Tests: 
 
-Frontend: Bei den Frontend Seiten habe ich ein vorhandenes HTML Template verwendet und lediglich für meine Anforderungen angepasst bzw. erweitert.
+Die automatischen Tests belaufen sich auf die Erstellung eines neuen Benutzers sowie auf das Testen der CRUD Funktionen. Da die CRUD Funktionen aufeinander beruhen, müssen diese in einer chronologischen Reihenfolge abgearbeitet werden und können nicht einzeln getestet werden.
+
+Frontend: 
+
+Bei den Frontend Seiten habe ich ein vorhandenes HTML Template verwendet und lediglich für meine Anforderungen angepasst bzw. erweitert.
