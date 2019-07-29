@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 16px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=field], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.registerbtn:hover {
+  opacity: 1;
+}
+
+/* Add a blue text color to links */
+a {
+  color: dodgerblue;
+}
+
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+  background-color: #f1f1f1;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<script>
+	var userValid = true;
+	
+	function checkUsername(){
+		var username = document.getElementById("username").value;
+		
+		var xhr = new XMLHttpRequest();
+		var url = "http://localhost:8080/PersonService/rest/Person/get/" + username;
+		xhr.open("GET", url, true);
+		xhr.send(null);
+
+		xhr.onload = function() {
+			if(xhr.status == 201) {
+				userValid = false;
+			} else {
+				userValid = true;
+			}
+		}
+	}
+
+	function sendRegistrationData() {
+  		var username = document.getElementById("username").value;
+  		var name = document.getElementById("name").value;
+  		var email = document.getElementById("email").value;
+  		var psw = document.getElementById("psw").value;
+  		var pswrepeat = document.getElementById("psw-repeat").value;
+
+		// Check if the userdata match the criteria
+  		
+		if(!userValid){
+			alert("Der Benutzername existiert bereits");
+			return false;
+		}
+
+		if(username == ""){
+			alert("Es muss ein Benutzername angegeben werden");
+			return false;
+		}
+		
+		if(name == ""){
+			alert("Es muss ein Name angegeben werden");
+			return false;
+		} else if(name.length < 3 || name.length > 20) {
+			alert("Name muss zwischen 3 und 20 Zeichen lang sein")
+			return false;
+		}
+
+		if(email == ""){
+			alert("Es muss eine E-Mail angegeben werden");
+			return false;
+		}
+		
+  		if(psw != "" && psw == pswrepeat) {
+			
+  			var xhr = new XMLHttpRequest();
+  			var url = "http://localhost:8080/PersonService/rest/Person/register";
+  			xhr.open("POST", url, true);
+  			xhr.setRequestHeader("Content-Type", "application/json");
+  			var data = JSON.stringify({"username":username,"name":name,"email":email,"password":psw});
+  			
+  			xhr.onload = function() {
+
+				// Check if the request was successful and redirect to the login page
+  	  			
+  		    	if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 201) {
+  		        	console.log(xhr.responseText);
+  		        	location.replace(window.location.href='/PersonService/Login.html')
+  		    	} else {
+					alert("Ups! Etwas lief schief. Überprüfen Sie Ihre Eingaben")
+  	  		    }
+  			}
+  	  		
+  			xhr.send(data);
+  		} else {
+  	  		alert("Passwörter stimmen nicht überein");
+  		}
+	}
+</script>
+
+<div>
+  <div class="container">
+    <h1>Registrierung</h1>
+    <p>Bitte alle Felder ausfüllen, um einen neuen Account zu erstellen</p>
+    <hr>
+
+	<label for="username"><b>Benutzername</b></label>
+    <input id="username" onfocusout="checkUsername()" type="text" placeholder="Benutzername" name="username" required>
+    
+    <label for="name"><b>Name</b></label>
+    <input id="name" type="text" placeholder="name" name="Name" required>
+
+    <label for="email"><b>Email</b></label>
+    <input id="email" type="text" placeholder="Enter Email" name="E-Mail" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input id="psw" type="password" name="password" placeholder="Passwort" required>
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input id="psw-repeat" type="password" name="password" placeholder="Passwort" required>
+
+    <button type="submit" onclick="sendRegistrationData()" class="registerbtn">Registrieren</button>
+  </div>
+  
+  <div class="container signin">
+    <p>Haben Sie bereits einen Account? <a href="/PersonService/Login.html">Einloggen</a>.</p>
+  </div>
+</div>
+</body>
+</html>

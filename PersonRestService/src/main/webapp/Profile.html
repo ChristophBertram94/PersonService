@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 16px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=field], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+input,
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+
+/* style the submit button */
+button[type=submit] {
+  background-color: #4CAF50;
+  height: 50px;
+  width: 450px;
+  color: white;
+  margin-top: 15px;
+  display: block;
+  cursor: pointer;
+}
+
+.registerbtn:hover {
+  opacity: 1;
+}
+
+.logoutButton { 
+	height: 30px;
+	width: 100px;
+    display:block;
+    float:right;
+    background-color: green;
+    color: white;
+    text-align:center;  
+}
+
+/* Add a blue text color to links */
+a {
+  color: dodgerblue;
+}
+
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+  background-color: #f1f1f1;
+  text-align: center;
+}
+</style>
+</head>
+<body onload="getProfileData()">
+
+<script>
+
+	/* Loads user data
+	*  cookie stores the username from login
+	*  user data are based on the username
+	*/
+
+	function getProfileData() {
+
+		var xhr = new XMLHttpRequest();
+		
+		var username = document.cookie.split("=")[1];
+		var url = "http://localhost:8080/PersonService/rest/Person/get/" + username;
+		xhr.open("GET", url, true);
+		xhr.send();
+
+		xhr.onload = function() {
+			var data = JSON.parse(xhr.responseText)
+			
+			// Sets the loaded user data
+			
+			document.getElementById("username").value = data.username;
+			document.getElementById("name").value = data.name;
+			document.getElementById("email").value = data.email;	
+		}
+	}
+
+	function deleteProfile() {
+		var xhr = new XMLHttpRequest();
+		var username = document.cookie.split("=")[1];
+		console.log(username);
+		console.log(document.cookie);
+		var url = "http://localhost:8080/PersonService/rest/Person/delete/" + username;
+		xhr.open("DELETE", url, true);
+		xhr.send();
+
+		// Removes user and redirects back to login page
+		
+		xhr.onload = function(){
+			if(xhr.status === 201) {
+				location.replace(window.location.href='/PersonService/Login.html')
+			}
+		} 
+	}
+	
+	function sendUpdatedProfiledata() {
+
+		// As username serves as the user id it can not be changed
+  		var username = document.getElementById("username").value;
+  		var name = document.getElementById("name").value;
+  		var email = document.getElementById("email").value;
+  		var psw = document.getElementById("psw").value;
+  		var pswrepeat = document.getElementById("psw-repeat").value;
+
+  		// if name or email do not match the criteria they simply will not be updated
+  		if(psw == pswrepeat) {
+
+  			var xhr = new XMLHttpRequest();
+  			var url = "http://localhost:8080/PersonService/rest/Person/update";
+  			xhr.open("POST", url, true);
+  			xhr.setRequestHeader("Content-Type", "application/json");
+  			var data = JSON.stringify({"username":username,"name":name,"email":email,"password":psw});
+
+  			xhr.onload = function() {
+  		    	if (xhr.status === 201) {
+  		        	alert("Profil erfolgreich aktualisiert");
+  		    	} else {
+					alert("Profil konnte nicht aktualisiert werden");
+  	  		    }
+  			}
+  		
+  			xhr.send(data);
+  		} else {
+  	  		alert("Passwörter stimmen nicht überein");
+  		}
+	}
+</script>
+
+<div>
+  <button class="logoutButton" onClick="window.location.href='/PersonService/Login.html'">Log out</button>
+
+  <div class="container">
+    <h1>Profile</h1>
+    <hr>
+
+	<label for="username"><b>Benutzername</b></label>
+    <input id="username" type="text" value="Benutzername" name="username" disabled>
+    
+    <label for="name"><b>Name</b></label>
+    <input id="name" type="text" value="Name" name="Name" required>
+
+    <label for="email"><b>Email</b></label>
+    <input id="email" type="text" value="E-Mail" name="E-Mail" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input id="psw" type="password" name="" placeholder="Passwort" required>
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input id="psw-repeat" type="password" name="" placeholder="Passwort" required>
+
+	<div style="display: flex; justify-content: center;">
+    	<button type="submit" onclick="sendUpdatedProfiledata()" class="registerbtn">Änderungen bestätigen</button>
+    	<button type="submit" style="background-color:#FF0000" onClick="deleteProfile()" class="registerbtn">Profil löschen</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

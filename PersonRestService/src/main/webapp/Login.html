@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* style the container */
+.container {
+  position: relative;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  padding: 20px;
+} 
+
+/* style inputs and link buttons */
+input,
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+
+/* style the submit button */
+button[type=submit] {
+  background-color: #4CAF50;
+  height: 50px;
+  width: 450px;
+  color: white;
+  margin-top: 15px;
+  display: block;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+</style>
+</head>
+<body>
+
+<script>
+	function sendLoginData() {
+  		var username = document.getElementById("username").value;
+  		var password = document.getElementById("password").value;
+  		console.log(username);
+  		console.log(password);
+
+  		var xhr = new XMLHttpRequest();
+  		var url = "http://localhost:8080/PersonService/rest/Person/login";
+  		xhr.open("POST", url, true);
+  		xhr.setRequestHeader("Content-Type", "application/json");
+  		var data = JSON.stringify({"username":username,"password":password});
+
+		// Check if request was successful and redirect to the profile page
+  		
+  		xhr.onload = function() {
+  		    if (xhr.readyState === 4 && xhr.status === 201) {
+  		      	document.cookie = "username=" + username;
+  		        location.replace(window.location.href='/PersonService/Profile.html')
+  		    } else if(xhr.status === 404){
+				alert("Benutzername oder Passwort sind falsch");
+  	  		}
+  		}
+  		
+  		xhr.send(data);
+	}
+</script>
+
+
+
+<h2>Login</h2>
+
+<div class="container">
+	<div>
+        <input id="username" type="text" name="username" placeholder="Username" required>
+        <input id="password" type="password" name="password" placeholder="Password" required>
+        <div style="display: flex; justify-content: center;">
+        	<button type="submit" onclick="sendLoginData()" value="Login">Login</button>
+        	<button type="submit" onclick="window.location.href='/PersonService/Registrierung.html'">Registrieren</button>
+      	</div>
+ 	</div>
+</div>
+
+</body>
+</html>
